@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, Button, TouchableOpacity, Dimensions  } from 'react-native';
+import { Dimensions  } from 'react-native';
 import { LineChart} from "react-native-chart-kit";
 import moment from "moment";
 import 'moment-timezone';
@@ -9,17 +9,24 @@ import { Container, Title, Back, BackTexto, ContainerGraph } from './styles';
 
 
 export default function Graph({route, navigation}) {
-
   const { data } = route.params;
   const [ horaFinal, setHoraFinal] = useState(moment().format('LT'))
   const [ numeroFinal, setNumeroFinal] = useState(moment().format('L'))
-  const [ horaInicio, setHoraInicio] = useState(moment().subtract(24.08, 'hours').format('LT'))
+  const [ horaInicio, setHoraInicio] = useState(moment().subtract(300, 'seconds').format('LT'))
   const [ numeroInicio, setNumeroInicio] = useState(moment().subtract(1, 'days').format('L'))
 
-  var randoms = [...Array(288)].map(() => '');
+  function range(start, end) {
+    var ans = [];
+    for (let i = start; i <= end; i+=300) {
+        ans.push(moment(i * 1000).format('LT'));
+    }
+    return ans;
+}
 
+  
+  var times = range(moment().unix()-86400, moment().unix()-300);
   const data2 = {
-    labels: [numeroInicio + ' ' + horaInicio, '', '', '', '', '', numeroFinal + ' ' + horaFinal],
+    labels: [numeroInicio + ' ' + horaInicio, times[30],  times[90], times[130], times[160], times[200], times[240], times[280], numeroFinal + ' ' + horaFinal],
     
     datasets: [
       {
@@ -32,7 +39,7 @@ export default function Graph({route, navigation}) {
           Math.random() * 100,
           Math.random() * 100,
           Math.random() * 100],
-        color: (opacity = 1) => `rgba(0, 255, 0)`, // optional
+        color: () => `rgba(0, 255, 0)`, 
       },
       {
         data: [
@@ -45,7 +52,7 @@ export default function Graph({route, navigation}) {
           Math.random() * 100,
           Math.random() * 100
         ],
-        color: (opacity = 1) => `rgba(0, 0, 255)`, // optional
+        color: () => `rgba(0, 0, 255)`, 
       }
     ]
   };
@@ -64,10 +71,11 @@ export default function Graph({route, navigation}) {
       height={screenHeight}
       withShadow={false}
       fromZero={true}
+      xLabelsOffset={1}
       chartConfig={{
-        backgroundColor: "#e26a00",
-        backgroundGradientFrom: "#fb8c00",
-        backgroundGradientTo: "#ffa726",
+        backgroundColor: "#f1f8ff",
+        backgroundGradientFrom: "#f1f8ff",
+        backgroundGradientTo: "#f1f8ff",
         decimalPlaces: 0, // optional, defaults to 2dp
         color: () => `rgba(0, 0, 0)`,
         labelColor: () => `rgba(0, 0, 0)`,
@@ -77,9 +85,6 @@ export default function Graph({route, navigation}) {
     />
 
     </ContainerGraph>
-    
-       
-       
        <Back onPress={() => navigation.popToTop()}>
          <BackTexto>Voltar</BackTexto>
        </Back>
