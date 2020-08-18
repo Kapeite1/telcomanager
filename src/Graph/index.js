@@ -18,7 +18,7 @@ export default function Graph({route, navigation}) {
   function range(start, end) {
     var ans = [];
     for (let i = start; i <= end; i+=300) {
-        ans.push(moment(i * 1000).format('LT'));
+        ans.push(moment(i * 1000).format('L') + ' ' + moment(i * 1000).format('LT') );
     }
     return ans;
 }
@@ -26,7 +26,7 @@ export default function Graph({route, navigation}) {
   
   var times = range(moment().unix()-86400, moment().unix()-300);
   const data2 = {
-    labels: [numeroInicio + ' ' + horaInicio, times[30],  times[90], times[130], times[160], times[200], times[240], times[280], numeroFinal + ' ' + horaFinal],
+    labels: [numeroInicio + ' ' + horaInicio,   times[57], times[114],  times[171], times[228], times[280], numeroFinal + ' ' + horaFinal],
     
     datasets: [
       {
@@ -57,21 +57,24 @@ export default function Graph({route, navigation}) {
     ]
   };
   const screenWidth = Dimensions.get("window").width;
-  const screenHeight = Dimensions.get("window").height*0.6;
+  const screenHeight = Dimensions.get("window").height*0.4;
 
 
  return (
    <Container>
     <Title>{data.object_name}</Title>
 
-    <ContainerGraph>
+
     <LineChart
       data={data2}
       width={screenWidth}
       height={screenHeight}
+      
       withShadow={false}
       fromZero={true}
-      xLabelsOffset={1}
+      verticalLabelRotation={67}
+      xLabelsOffset={-15}
+      
       chartConfig={{
         backgroundColor: "#f1f8ff",
         backgroundGradientFrom: "#f1f8ff",
@@ -80,11 +83,18 @@ export default function Graph({route, navigation}) {
         color: () => `rgba(0, 0, 0)`,
         labelColor: () => `rgba(0, 0, 0)`,
         
+              
       }}
       bezier
+      style={{          
+          paddingBottom: 70,     
+          paddingEnd: 30
+          
+
+      }}
     />
 
-    </ContainerGraph>
+
        <Back onPress={() => navigation.popToTop()}>
          <BackTexto>Voltar</BackTexto>
        </Back>
